@@ -1,7 +1,5 @@
 package org.grube.bookstoreapispring.book;
 
-
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 
 import javax.persistence.*;

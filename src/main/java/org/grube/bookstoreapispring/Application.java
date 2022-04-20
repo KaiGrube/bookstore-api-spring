@@ -11,10 +11,10 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    public CommandLineRunner run(BookRepository repository) {
-        return (args -> {
-            System.out.println(repository.findAll());
-        });
-    }
+//    @Bean
+//    public CommandLineRunner run(BookRepository repository) {
+//        return (args -> {
+//            System.out.println(repository.findAll());
+//        });
+//    }
 }
