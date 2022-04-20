@@ -1,6 +1,5 @@
 package org.grube.bookstoreapispring.book;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.grube.bookstoreapispring.error.ApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +11,6 @@ import java.util.List;
 
 @RestController
 public class BookController {
-
-    ObjectMapper mapper = new ObjectMapper();
     private final BookService bookService;
 
     public BookController(BookService bookService) {
@@ -22,8 +19,8 @@ public class BookController {
 
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getBooks() {
-        List<Book> list = bookService.getBooks();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        List<Book> books = bookService.getBooks();
+        return ResponseEntity.ok().body(books);
     }
 
     @PostMapping("/books")
@@ -31,7 +28,7 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             ApiException apiException = new ApiException(HttpStatus.BAD_REQUEST, "Validation Error");
             bindingResult.getAllErrors().forEach((error -> apiException.addSubMessage(error.getDefaultMessage())));
-            return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(apiException);
         }
         Book newBook = bookService.createBook(book);
         return ResponseEntity.ok().body(newBook);
