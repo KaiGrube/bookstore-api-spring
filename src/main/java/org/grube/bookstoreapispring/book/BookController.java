@@ -34,10 +34,9 @@ public class BookController {
 //    }
 
     @GetMapping("/books")
-    public List<Book> getBooks() {
+    public ResponseEntity<List<Book>> getBooks() {
         List<Book> list = bookService.getBooks();
-        System.out.println(list);
-        return list;
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/books")
