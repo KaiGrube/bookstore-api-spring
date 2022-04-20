@@ -18,20 +18,12 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public ResponseEntity<List<Book>> getBooks() {
-        List<Book> books = bookService.readBooks();
-        return ResponseEntity.ok().body(books);
-    }
-
-    @GetMapping("/books-paged")
-    public ResponseEntity<List<Book>> getBooks(
-            @RequestParam int page,
-            @RequestParam int limit,
-            @RequestParam String sortBy) {
+    public ResponseEntity<List<Book>> getBooks(@RequestParam String filter,
+                                               @RequestParam int page,
+                                               @RequestParam int limit,
+                                               @RequestParam String sortBy) {
         // todo: validation for request params/error handling
-
-        List<Book> books = bookService.readBooks(page, limit, sortBy);
-        return ResponseEntity.ok().body(books);
+        return ResponseEntity.ok().body(bookService.readBooks(filter, limit, page, sortBy));
     }
 
     @PostMapping("/books")

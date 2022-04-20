@@ -1,5 +1,6 @@
 package org.grube.bookstoreapispring.book;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,9 +23,9 @@ public class BookService {
         return bookRepository.findAll(wholePage).stream().toList();
     }
 
-    public List<Book> readBooks(int page, int limit, String sortBy) {
+    public List<Book> readBooks(String filter,  int limit, int page, String sortBy) {
         Pageable pageable = PageRequest.of(page, limit, Sort.by(sortBy));
-        return bookRepository.findAll(pageable).stream().toList();
+        return bookRepository.findBooksByTitleContaining(filter, pageable).stream().toList();
     }
 
     public Book createBook(Book book) {
