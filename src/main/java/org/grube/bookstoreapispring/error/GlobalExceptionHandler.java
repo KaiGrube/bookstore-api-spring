@@ -31,8 +31,9 @@ public class GlobalExceptionHandler {
 //        return ResponseEntity.badRequest().body(apiException);
 //    }
 
+    // "global" exceptions (uncaught, default, fallthrough)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(Exception exception, WebRequest request) {
+    public ResponseEntity<Object> handleException(Exception exception, WebRequest request) {
         ApiException apiException = new ApiException(HttpStatus.BAD_REQUEST, "'Global' exception occurred");
         apiException.addSubMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiException);

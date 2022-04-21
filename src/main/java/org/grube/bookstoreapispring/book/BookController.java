@@ -23,17 +23,13 @@ public class BookController {
                                                @RequestParam int page,
                                                @RequestParam int limit,
                                                @RequestParam String sortBy) {
-        return ResponseEntity
-                .ok()
-                .body(bookService.readBooks(filter, limit, page, sortBy));
+        return ResponseEntity.ok().body(bookService.readBooks(filter, limit, page, sortBy));
     }
 
     @GetMapping("/books/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable long id) {
-        return ResponseEntity
-                .ok()
-                .body(bookService.readBookById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Book not found. id=%d", id))));
+        return ResponseEntity.ok().body(bookService.readBookById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Book (id=%d) not found.", id))));
     }
 
     @PostMapping("/books")
@@ -41,9 +37,7 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             ApiException apiException = new ApiException(HttpStatus.BAD_REQUEST, "Validation Error");
             bindingResult.getAllErrors().forEach((error -> apiException.addSubMessage(error.getDefaultMessage())));
-            return ResponseEntity
-                    .badRequest()
-                    .body(apiException);
+            return ResponseEntity.badRequest().body(apiException);
         }
         return ResponseEntity.ok().body(bookService.createBook(book));
     }
