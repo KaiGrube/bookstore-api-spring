@@ -13,7 +13,6 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://0.0.0.0:3001") // allow swagger
 @RestController
-@RequestMapping("/api/v2/")
 public class BookController {
     private final BookService bookService;
 
