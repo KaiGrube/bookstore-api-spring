@@ -1,0 +1,80 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Kgrube/bookstore/1.0.0
+  - description: My local bookstore API
+    url: http://localhost:8080
+info:
+  description: API for bookstore project
+  version: 1.0.0
+  title: bookstore-api
+paths:
+  /books/{id}:
+    get:
+      summary: Find book by its id
+      operationId: getBookById
+      description: Returns a single book
+      parameters:
+        - in: path
+          name: id
+          description: numeric id of book to get
+          required: true
+          example: 42
+          schema:
+            type: integer
+            minimum: 0
+            format: int64
+      responses:
+        '200':
+          description: book successfully received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/book-entry'
+  /books:
+    post:
+      summary: Add new book to store
+      operationId: createBook
+      description: Returns newly created book
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/book-entry'
+      responses:
+        '201':
+          description: Created
+          
+components:     
+  schemas:
+    book-entry:
+      type: object
+      properties:
+        title: 
+          type: string
+          minLength: 1
+          example: "Essential Skills for the Agile Developer"
+        subtitle: 
+          type: string
+          minLength: 1
+          example: "A Guide to Better Programming and Design"
+        isbn13:
+          type: string
+          minLength: 13
+          maxLength: 13
+          example: "9780321543738"
+        price:
+          type: number
+          example: 10.4
+        image:
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: "https://itbook.store/img/books/9780321543738.png"
+        url:
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: "https://itbook.store/books/9780321543738"
+            

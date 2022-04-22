@@ -4,6 +4,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,6 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-
     public List<Book> readBooks(String filter, int limit, int page, String sortBy) {
         Pageable pageable = PageRequest.of(page, limit, Sort.by(sortBy));
         return bookRepository.findBooksByTitleContaining(filter, pageable)
@@ -36,5 +36,9 @@ public class BookService {
     public Book createBook(Book book) {
         bookRepository.save(book);
         return book;
+    }
+
+    public void deleteBookById(long id) {
+        bookRepository.deleteById(id);
     }
 }

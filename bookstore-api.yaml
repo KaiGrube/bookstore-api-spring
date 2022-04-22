@@ -1,0 +1,56 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Kgrube/bookstore/1.0.0
+  - description: My local bookstore API
+    url: http://localhost:8080
+info:
+  description: This is a simple API
+  version: 1.0.0
+  title: books-api
+paths:
+  /books/{id}:
+    get:
+      summary: Find book by its id
+      operationId: getBookById
+      description: Returns a single book 
+      parameters:
+        - in: path
+          name: id
+          description: numeric id of book to get
+          required: true
+          example: 42
+          schema:
+            type: integer
+            minimum: 0
+            format: int64
+      responses:
+        '200':
+          description: book successfully received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/book'
+          
+components:
+  schemas:
+    book:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 42
+        title: 
+          type: string
+          minLength: 1
+          example: "The Hitchhiker's Guide To The Galaxy"
+        subtitle: 
+          type: string
+          minLength: 1
+          example: "n.a."
+        isbn13:
+          type: string
+          minLength: 1
+          example: "n.a."
