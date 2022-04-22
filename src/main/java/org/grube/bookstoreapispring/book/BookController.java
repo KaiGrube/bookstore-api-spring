@@ -9,9 +9,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+import java.net.URI;
 import java.util.List;
 
-@CrossOrigin(origins = "http://0.0.0.0:3001") // allow swagger
+//@CrossOrigin(origins = "http://0.0.0.0:3001") // allow swagger
 @RestController
 public class BookController {
     private final BookService bookService;
@@ -21,10 +25,20 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public ResponseEntity<List<Book>> getBooks(@RequestParam String filter,
-                                               @RequestParam int page,
-                                               @RequestParam int limit,
-                                               @RequestParam String sortBy) {
+    public ResponseEntity<List<Book>> getBooks(
+            @RequestParam(defaultValue = "", required = false)
+            @Size(min = 0, max = 255)
+            String filter,
+            @RequestParam(defaultValue = "0", required = false)
+            @Min(value = 0, message = "page must be equal to 0 or greater")
+            Integer page,
+            @RequestParam(defaultValue = "5", required = false)
+            @Min(value = 1, message = "limit must be greater than zero")
+            @Max(value = 100, message = "limit must be smaller than 100")
+            int limit,
+            @RequestParam(defaultValue="title", required = false)
+            String sortBy
+    ) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(bookService.readBooks(filter, limit, page, sortBy));
@@ -39,7 +53,7 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public ResponseEntity<Object> postBook(@Valid @RequestBody Book book, BindingResult bindingResult) {
+    public ResponseEntity<Object> postBook(@Valid @RequestBody Book bookToCreate, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ApiException apiException = new ApiException(HttpStatus.BAD_REQUEST, "Validation Error");
             bindingResult.getAllErrors().forEach((error -> apiException.addSubMessage(error.getDefaultMessage())));
@@ -47,14 +61,18 @@ public class BookController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(apiException);
         }
-        return ResponseEntity.ok()
+        Book newBook = bookService.createBook(bookToCreate);
+        return ResponseEntity.created(URI.create("http://localhost:8080/books/" + newBook.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(bookService.createBook(book));
+                .body(bookService.createBook(bookToCreate));
     }
 
     @DeleteMapping("/books/{id}")
     public ResponseEntity<Long> deleteBook(@PathVariable long id) {
-        bookService.deleteBookById(id);
+        bookService.readBookById(id).ifPresentOrElse(book -> bookService.deleteBookById(id), () -> {
+            throw new ResourceNotFoundException("id not found");
+        });
+
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(id);

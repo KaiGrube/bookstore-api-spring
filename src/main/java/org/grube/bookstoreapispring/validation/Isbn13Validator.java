@@ -11,16 +11,15 @@ public class Isbn13Validator implements ConstraintValidator<Isbn13Constraint, St
     }
 
     @Override
-    public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        if (s == null || s.length() != 13) {
+    public boolean isValid(String input, ConstraintValidatorContext constraintValidatorContext) {
+        if (input == null || input.length() != 13) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("isbn must be 13 digits number").addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("isbn must be 13 digits string").addConstraintViolation();
             return false;
         }
-
-        String isbn12 = s.substring(0, s.length() - 1);
+        String isbn12 = input.substring(0, input.length() - 1);
         String checkDigit = String.valueOf(isbn13CheckDigit(isbn12));
-        String lastDigit = s.substring(s.length() - 1);
+        String lastDigit = input.substring(input.length() - 1);
         if (!checkDigit.equals(lastDigit)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("invalid check digit").addConstraintViolation();
