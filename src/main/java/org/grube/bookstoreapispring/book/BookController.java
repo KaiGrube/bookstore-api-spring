@@ -27,8 +27,7 @@ public class BookController {
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getBooks(
             @RequestParam(defaultValue = "", required = false)
-            @Size(min = 0, max = 255)
-            String filter,
+            @Size(min = 0, max = 255) String filter,
             @RequestParam(defaultValue = "0", required = false)
             @Min(value = 0, message = "page must be equal to 0 or greater")
             Integer page,
@@ -48,8 +47,8 @@ public class BookController {
     public ResponseEntity<Book> getBookById(@PathVariable long id) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(bookService.readBookById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Book (id=%d) not found.", id))));
+                .body(bookService.readBookById(id).orElseThrow(
+                        () -> new ResourceNotFoundException(String.format("Book (id=%d) not found.", id))));
     }
 
     @PostMapping("/books")
@@ -64,7 +63,7 @@ public class BookController {
         Book newBook = bookService.createBook(bookToCreate);
         return ResponseEntity.created(URI.create("http://localhost:8080/books/" + newBook.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(bookService.createBook(bookToCreate));
+                .body(newBook);
     }
 
     @DeleteMapping("/books/{id}")
