@@ -9,6 +9,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @ControllerAdvice
 public class ExceptionHandler {
 
+    // todo: Custom ResourceNotFoundException mistakenly returns BAD REQUEST $ makes no sense at all :-)
     @org.springframework.web.bind.annotation.ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest request) {
         ApiException apiException = new ApiException(HttpStatus.NOT_FOUND, "Resource not found.");

@@ -24,6 +24,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
+    // To bind RequestParams to POJO, see http://dolszewski.com/spring/how-to-bind-requestparam-to-object/
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getBooks(
             @RequestParam(defaultValue = "", required = false)
