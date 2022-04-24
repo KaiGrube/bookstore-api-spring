@@ -11,19 +11,22 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @ControllerAdvice
 @Configuration
-@PropertySource("classpath:messages.yml")
+@PropertySource("classpath:exceptions.yml")
 public class ExceptionHandler {
 
-    @Value("${idNotFound}") private String idNotFound;
-    @Value("${methodArgumentTypeMismatchException}") private String methodArgumentTypeMismatchException;
-    @Value("${globalException}") private String globalException;
+    @Value("${ResourceNotFoundException}")
+    private String resourceNotFoundExceptionMessage;
+    @Value("${MethodArgumentTypeMismatchException}")
+    private String methodArgumentTypeMismatchException;
+    @Value("${GlobalException}")
+    private String globalException;
 
     // todo: Custom ResourceNotFoundException mistakenly returns BAD REQUEST $ makes no sense at all :-)
     @org.springframework.web.bind.annotation.ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest request) {
-        ApiException apiException = new ApiException(HttpStatus.NOT_FOUND, idNotFound);
+        ApiException apiException = new ApiException(HttpStatus.NOT_FOUND, resourceNotFoundExceptionMessage);
         apiException.addSubMessage(exception.getMessage());
-        return ResponseEntity.badRequest().body(apiException);
+        return ResponseEntity.notFound().build();
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -44,7 +47,6 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception exception, WebRequest request) {
         ApiException apiException = new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, globalException);
-//        apiException.addSubMessage(exception.getMessage());
         apiException.addSubMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiException);
     }

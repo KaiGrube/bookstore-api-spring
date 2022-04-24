@@ -43,4 +43,13 @@ public class Book {
     @URL (message = "url must be a valid url")
     @NotNull (message = "url must not be null")
     private String url;
+
+    public Book(String title, String subtitle, String isbn13, double price, String image, String url) {
+        this.title = title;
+        this.subtitle = subtitle;
+        this.isbn13 = isbn13;
+        this.price = price;
+        this.image = image;
+        this.url = url;
+    }
 }
