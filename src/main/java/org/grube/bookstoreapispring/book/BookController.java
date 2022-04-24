@@ -24,11 +24,11 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    // To bind RequestParams to POJO, see http://dolszewski.com/spring/how-to-bind-requestparam-to-object/
     @GetMapping("/books")
     public ResponseEntity<List<Book>> getBooks(
             @RequestParam(defaultValue = "", required = false)
-            @Size(min = 0, max = 255) String filter,
+            @Size(min = 0, max = 255)
+            String filter,
             @RequestParam(defaultValue = "0", required = false)
             @Min(value = 0, message = "page must be equal to 0 or greater")
             Integer page,
