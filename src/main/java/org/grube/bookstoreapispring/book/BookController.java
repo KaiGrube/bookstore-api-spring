@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,6 +17,7 @@ import java.net.URI;
 import java.util.List;
 
 //@CrossOrigin(origins = "http://0.0.0.0:3001") // allow swagger
+@Validated
 @RestController
 public class BookController {
     private final BookService bookService;
@@ -25,20 +27,10 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public ResponseEntity<List<Book>> getBooks(
-            @RequestParam(defaultValue = "", required = false)
-            @Size(min = 0, max = 255)
-            String filter,
-            @RequestParam(defaultValue = "0", required = false)
-            @Min(value = 0, message = "page must be equal to 0 or greater")
-            Integer page,
-            @RequestParam(defaultValue = "5", required = false)
-            @Min(value = 1, message = "limit must be greater than zero")
-            @Max(value = 100, message = "limit must be smaller than 100")
-            int limit,
-            @RequestParam(defaultValue="title", required = false)
-            String sortBy
-    ) {
+    public ResponseEntity<List<Book>> getBooks(@RequestParam(defaultValue = "", required = false) String filter,
+                                               @RequestParam(defaultValue = "0", required = false) int page,
+                                               @RequestParam(defaultValue = "10", required = false) @Max(value = 100) int limit,
+                                               @RequestParam(defaultValue="title", required = false) String sortBy) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(bookService.readBooks(filter, limit, page, sortBy));

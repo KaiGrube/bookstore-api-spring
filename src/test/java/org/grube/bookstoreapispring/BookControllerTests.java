@@ -1,5 +1,6 @@
 package org.grube.bookstoreapispring;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -22,7 +24,7 @@ class BookControllerTests {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("POST /books (valid) should return 200 and request body with newly created book. ")
+    @DisplayName("1.) POST /books (valid) should return 200 and request body with newly created book. ")
     void postBook() throws Exception {
 
         JSONObject requestBody = new JSONObject();
@@ -43,9 +45,50 @@ class BookControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.image").value("https://picsum.photos/200/300/?blur"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.url").value("http://www.someUrl.org"))
                 .andReturn();
+//        JSONObject response = new JSONObject(mvcResult.getResponse().getContentAsString());
+//        long id = response.getLong("id");
+//        System.out.println("id=" + id);
+//
+//        PostRequestBody body = new PostRequestBody();
+//        System.out.println(body);
+    }
+
+    @Test
+    @DisplayName("2.) POST /books (valid) should return 200 and request body with newly created book. ")
+    void postBook2() throws Exception {
+        PostRequestBody requestBody = new PostRequestBody();
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(requestBody);
+        MvcResult mvcResult = mockMvc.perform(post("/books")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(requestBody.getTitle()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.subtitle").value(requestBody.getSubtitle()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.isbn13").value(requestBody.getIsbn13()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(requestBody.getPrice()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.image").value(requestBody.getImage()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.url").value(requestBody.getUrl()))
+                .andReturn();
         JSONObject response = new JSONObject(mvcResult.getResponse().getContentAsString());
-        long id = response.getLong("id");
-        System.out.println("id=" + id);
+        System.out.println(response);
+    }
+
+    @Test
+    @DisplayName("2.) POST /books (valid) should return 200 and request body with newly created book. ")
+    void postRequest_receiveTitleNotNull() throws Exception {
+        PostRequestBody requestBody = new PostRequestBody();
+        requestBody.setTitle(null);
+        ObjectMapper mapper = new ObjectMapper();
+        String content = mapper.writeValueAsString(requestBody);
+        MvcResult mvcResult = mockMvc.perform(post("/books")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+//                .andExpect(result -> assertTrue(result.getResolvedException() instanceof RuntimeException))
+                .andReturn();
+        JSONObject response = new JSONObject(mvcResult.getResponse().getContentAsString());
+        System.out.println(response);
     }
 
     @Test

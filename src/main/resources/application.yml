@@ -18,14 +18,3 @@ spring:
 server:
   error:
     include-message: always
-
-
-TestConfig:
-  postBookParams:
-    title: title
-    subtitle: subtitle
-    isbn13: isbn13
-    price: 42.42
-    image: http://www.image.org
-    url: http://www.url.org
-
