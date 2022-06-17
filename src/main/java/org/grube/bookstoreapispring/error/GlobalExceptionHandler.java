@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     // "global" exceptions (uncaught, default, fallthrough)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception exception, WebRequest request) {
-        logger.error("UUUUUUUUUUUUPPPPPPS" + exception.toString());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("UUUUUUUUUUUUPPPPPPS");
+        logger.error("Ups, uncaught exception" + exception.toString());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ups, uncaught exception");
     }
 }
