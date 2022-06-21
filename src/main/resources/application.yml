@@ -16,6 +16,6 @@ spring:
       wrap-root-value: false
 
 server:
-  port: 5000
+  port: 8080
   error:
     include-message: always
